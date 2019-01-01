@@ -8,6 +8,14 @@ LDPARAMS = -melf_i386
 objects = loader.o kernel.o
 
 
+run: mykernel.iso
+	# virtual box should be installed and a vm
+	# with name 'my os' should be setuped
+	VBoxManage controlvm "my os" poweroff && sleep 1 || true
+	(killall VirtualBox && sleep 1) || true
+	VBoxManage startvm 'my os' &
+
+
 mykernel.iso: mykernel.bin
 	mkdir iso
 	mkdir iso/boot
@@ -21,6 +29,7 @@ mykernel.iso: mykernel.bin
 	echo '}' 								>> iso/boot/grub/grub.cfg
 	grub-mkrescue --output=$@ iso
 	rm -rf iso
+	cp mykernel.iso ~/"VirtualBox VMs"/"my os"/
 	
 
 %.o: %.cpp
@@ -40,5 +49,11 @@ mykernel.bin: linker.ld $(objects)
 
 clean: 
 	rm $(objects) mykernel.bin mykernel.iso
-	rm -rf iso
+	
+	# check if iso folder is left out
+	if [-e ./iso]
+	then 
+		rm -rf ./iso
+	fi
+    
 
