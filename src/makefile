@@ -1,11 +1,11 @@
 # dependencies: g++, binutils, libc6-dev-i386
 
-GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore
+GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fno-stack-protector
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
 
-objects = loader.o kernel.o
+objects = loader.o gdt.o kernel.o
 
 
 run: mykernel.iso

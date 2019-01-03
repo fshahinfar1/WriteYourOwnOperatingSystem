@@ -1,5 +1,5 @@
 #include "types.h"
-
+#include "gdt.h"
 
 void printf(char * str) {
     static uint16_t* VIDEOMEM = (uint16_t*)0xb8000;
@@ -24,6 +24,7 @@ extern "C" void callConstructors() {
 extern "C" void kernelMain(const void * multiboot_structure,
         uint32_t /*multiboot_magic*/) {
     printf("Hello world!");
+    GlobalDescriptorTable gdt;
     while(1);
 }
 
