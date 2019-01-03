@@ -5,7 +5,10 @@ ASPARAMS = --32
 LDPARAMS = -melf_i386
 
 
-objects = loader.o gdt.o kernel.o
+objects  = loader.o
+objects += gdt.o 
+objects += port.o
+objects += kernel.o
 
 
 run: mykernel.iso
