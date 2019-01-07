@@ -4,8 +4,9 @@
 void printf(char* str);
 int atoi(int num, char* result);
 
-InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256];
+InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256]; // IDT
 
+InterruptManager* InterruptManager::ActiveInterruptManager = 0; // static pointer to interrupt manager object
 
 void InterruptManager::SetInterruptDescriptorTableEntry (
   uint8_t interruptNumber,
@@ -77,13 +78,31 @@ InterruptManager::~InterruptManager() {
 
 
 void InterruptManager::Activate() {
-  printf("Active interupts\n");
+  if (ActiveInterruptManager != 0) {
+    // if there is an active interrupt manager
+    ActiveInterruptManager->Deactivate();
+  }
+  ActiveInterruptManager = this;
   asm ("sti");
 }
 
+void InterruptManager::Deactivate() {
+  if (ActiveInterruptManager == this) {
+    ActiveInterruptManager = 0;
+    asm ("cli");
+  }
+}
+
 uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp) {
-  printf("INTERRUPT");
+  
+  if (ActiveInterruptManager != 0) {
+    return ActiveInterruptManager->DoHandleInterrupt(interruptNumber, esp);
+  }
   
   return esp;
 }
       
+uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp) {
+  printf("INTERRUPT!");
+  return esp;  
+}
