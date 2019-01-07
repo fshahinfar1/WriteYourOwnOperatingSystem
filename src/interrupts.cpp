@@ -104,5 +104,15 @@ uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp
       
 uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp) {
   printf("INTERRUPT!");
+
+  if (0x20 <= interruptNumber && interruptNumber <= 0x30) {
+    // answer interrupt if it is a hardware iterrupt
+    picMasterCommand.write(0x20);
+    if  (0x28 <= interruptNumber <= 0x30) {
+      // if interrupt is from slave pic then answer to him too
+      picSlaveCommand.write(0x20);
+    }
+  }
+
   return esp;  
 }
