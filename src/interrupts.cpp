@@ -2,7 +2,7 @@
 
 
 void printf(char* str);
-
+int atoi(int num, char* result);
 
 InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256];
 
@@ -19,7 +19,7 @@ void InterruptManager::SetInterruptDescriptorTableEntry (
   interruptDescriptorTable[interruptNumber].handlerAddressLowBits = ((uint32_t)handler) & 0xFFFF;
   interruptDescriptorTable[interruptNumber].handlerAddressHighBits = (((uint32_t)handler) >> 16) & 0xFFFF;
   interruptDescriptorTable[interruptNumber].gdt_codeSegmentSelector = codeSegmentSelectortOffset;
-  interruptDescriptorTable[interruptNumber].access = IDT_DESC_PRESENT | DescriptorType | ((DescriptortPrivilegeLevel & 3) << 5); 
+  interruptDescriptorTable[interruptNumber].access = IDT_DESC_PRESENT | ((DescriptortPrivilegeLevel & 3) << 5) | DescriptorType; 
   interruptDescriptorTable[interruptNumber].reserved = 0;
 }
 
@@ -29,8 +29,9 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
   picMasterData(0x21),
   picSlaveCommand(0xA0),
   picSlaveData(0xA1) {
+
   uint16_t CodeSegment = gdt->CodeSegmentSelector();
-  const uint8_t IDT_INTERRUPT_GATE = 0xE;
+  const uint8_t IDT_INTERRUPT_GATE = 0x0E;
 
   for (uint16_t i = 0; i < 256; i++) {
     SetInterruptDescriptorTableEntry (
@@ -58,9 +59,9 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
   
   
   picMasterData.write(0x01);
-  picMasterData.write(0x01);
+  picSlaveData.write(0x01);
   
-  picSlaveData.write(0x00);
+  picMasterData.write(0x00);
   picSlaveData.write(0x00);
   
   InterruptDescriptorTablePointer idt;
@@ -76,6 +77,7 @@ InterruptManager::~InterruptManager() {
 
 
 void InterruptManager::Activate() {
+  printf("Active interupts\n");
   asm ("sti");
 }
 

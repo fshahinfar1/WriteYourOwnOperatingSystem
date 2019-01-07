@@ -20,8 +20,8 @@
         static GateDescriptor interruptDescriptorTable[256];
 
         struct InterruptDescriptorTablePointer {
-          uint32_t base;
           uint16_t size;
+          uint32_t base;
         } __attribute__((packed));
 
         static void SetInterruptDescriptorTableEntry(

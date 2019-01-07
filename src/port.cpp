@@ -1,6 +1,8 @@
 #include "port.h"
 
 
+void printf(char* str);
+
 Port::Port(uint16_t portnumber) {
   this->portnumber = portnumber;
 }

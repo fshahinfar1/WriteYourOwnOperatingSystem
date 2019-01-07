@@ -11,7 +11,7 @@ objects += port.o
 objects += interruptstubs.o
 objects += interrupts.o
 objects += kernel.o
-
+objects += atoi.o
 
 run: mykernel.iso
 	# virtual box should be installed and a vm

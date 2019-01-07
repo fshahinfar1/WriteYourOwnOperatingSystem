@@ -28,7 +28,6 @@ HandleInterruptRequest 0x01
 
 
 
-
 int_bottom:
   
   pusha  
