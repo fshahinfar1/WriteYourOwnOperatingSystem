@@ -69,7 +69,20 @@ uint32_t MouseDriver::HandleInterrupt(uint32_t esp) {
     }
 
     flip_videomem(x, y);
-    
+  
+
+    for(uint8_t i = 0; i < 3; i++)
+    {
+      if((buffer[0] & (0x1<<i)) != (buttons & (0x1<<i)))
+      {
+        /*if(buttons & (0x1<<i))
+            handler->OnMouseButtonReleased(i+1);
+        else
+            handler->OnMouseButtonPressed(i+1);
+            */
+      }
+    } 
+    buttons = buffer[0]; 
   }
 
   return esp;
