@@ -125,12 +125,8 @@ uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp
 }
       
 uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp) {
-  if(interruptNumber != 0x20) {
-    printf("key\n");
-  }
-
   if(handlers[interruptNumber] != 0) {
-    printf("interrupt has a handler!\n");
+    // printf("interrupt has a handler!\n");
     esp = handlers[interruptNumber]->HandleInterrupt(esp);
   } else if (interruptNumber != 0x20) {
     // if not a clock interrupt
