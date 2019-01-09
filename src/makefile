@@ -1,6 +1,6 @@
 # dependencies: g++, binutils, libc6-dev-i386
 
-GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fno-stack-protector
+GCCPARAMS = -m32 -fno-use-cxa-atexit -nostdlib -fno-builtin -fno-rtti -fno-exceptions -fno-leading-underscore -fno-stack-protector -Wno-write-strings
 ASPARAMS = --32
 LDPARAMS = -melf_i386
 
@@ -11,6 +11,7 @@ objects += port.o
 objects += interruptstubs.o
 objects += interrupts.o
 objects += keyboard.o
+objects += mouse.o
 objects += kernel.o
 objects += atoi.o
 
