@@ -8,4 +8,6 @@ Trying to implement operating system described at http://www.wyoos.org
 - in 5th video I had an overflow issue when setting 256 enteries of <b>IDT</b>. I used `uint8_t` for counting until 256 but it would go back to zero when calculating 255 + 1. as a result my kernel would stuck in <b>Interrupt Manager</b>'s constructor.     
 - in 5th video I had an issue with <b>GDT</b>. I had put gdt address in incorrect order when trying to use `LGDT` assembly instruction.     
 - in 5th video I had an issue with a structure which hold a pointer data to <b>IDT</b>. the bits order for sending data using `LIDT` instruction were wrong.
-- in 5th video I had to implement something like atio function (converting interger to string) for debugging.     
+- in 5th video I had to implement something like atio function (converting interger to string) for debugging.    
+- in 6th video I had a problem when using InterruptManager in InterruptHandler. InterruptManager should have been pre-declared.
+- in 6th video I had an operator precedence issue `~1<<5` was not what I wanted `~(1<<5)`. In the video `~0x10` was used.
