@@ -10,6 +10,7 @@ objects += gdt.o
 objects += port.o
 objects += interruptstubs.o
 objects += interrupts.o
+objects += keyboard.o
 objects += kernel.o
 objects += atoi.o
 

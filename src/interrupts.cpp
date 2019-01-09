@@ -1,9 +1,29 @@
 #include "interrupts.h"
 
-
+// just functions
 void printf(char* str);
 int atoi(int num, char* result);
 
+
+// InterruptHandler
+
+InterruptHandler::InterruptHandler(uint8_t interruptNumber, InterruptManager* interruptManager) {
+  this->interruptManager = interruptManager;
+  interruptManager->handlers[interruptNumber] = this;
+}
+
+InterruptHandler::~InterruptHandler() {
+  if (interruptManager->handlers[interruptNumber] == this) {
+    interruptManager->handlers[interruptNumber] = 0;
+  }
+}
+
+uint32_t InterruptHandler::HandleInterrupt(uint32_t esp) {
+  return esp;
+}
+
+
+// InterruptManager
 InterruptManager::GateDescriptor InterruptManager::interruptDescriptorTable[256]; // IDT
 
 InterruptManager* InterruptManager::ActiveInterruptManager = 0; // static pointer to interrupt manager object
@@ -35,6 +55,7 @@ InterruptManager::InterruptManager(GlobalDescriptorTable* gdt)
   const uint8_t IDT_INTERRUPT_GATE = 0x0E;
 
   for (uint16_t i = 0; i < 256; i++) {
+    handlers[i] = 0;
     SetInterruptDescriptorTableEntry (
           i,
           CodeSegment,
@@ -84,6 +105,7 @@ void InterruptManager::Activate() {
   }
   ActiveInterruptManager = this;
   asm ("sti");
+  printf("Active InterruptManager\n");
 }
 
 void InterruptManager::Deactivate() {
@@ -103,7 +125,20 @@ uint32_t InterruptManager::handleInterrupt(uint8_t interruptNumber, uint32_t esp
 }
       
 uint32_t InterruptManager::DoHandleInterrupt(uint8_t interruptNumber, uint32_t esp) {
-  printf("INTERRUPT!");
+  if(interruptNumber != 0x20) {
+    printf("key\n");
+  }
+
+  if(handlers[interruptNumber] != 0) {
+    printf("interrupt has a handler!\n");
+    esp = handlers[interruptNumber]->HandleInterrupt(esp);
+  } else if (interruptNumber != 0x20) {
+    // if not a clock interrupt
+    //
+    // todo: print the unhandled interrupt number
+    // todo: add function to concatenate to strings
+    printf("Unhandled INTERRUPT!");
+  }
 
   if (0x20 <= interruptNumber && interruptNumber <= 0x30) {
     // answer interrupt if it is a hardware iterrupt

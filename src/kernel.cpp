@@ -1,6 +1,7 @@
 #include "types.h"
 #include "gdt.h"
 #include "interrupts.h"
+#include "keyboard.h"
 
 void printf(char * str) {
   static uint16_t* VIDEOMEM = (uint16_t*)0xb8000;
@@ -53,6 +54,11 @@ extern "C" void kernelMain(const void * multiboot_structure,
     printf("==================\n");
     GlobalDescriptorTable gdt;
     InterruptManager interrupts(&gdt);
+
+    // drivers
+    KeyboarDriver keyboard(&interrupts);
+
+
 
     interrupts.Activate();
 
